@@ -100,21 +100,20 @@ See also: <a href="modules.html">instructions sorted by category</a>.
 Actions {#using_actions}
 =======
 
-Actions are lower-cased words.
-
-Action	    | Comments
-:-----------|:-----------
-`power`	    | Power the object ON/OFF.
-`configure` | Configure the object.
-`write`	    | Write a value in the object.
-`clear`	    | Clear the object.
-`reset`	    | Reset the object.
-`read`	    | Read the object.
-`stat`	    | Read the status of the object.
-`toggle`    | Toggle the state of the object (usually an I/O pin).
-`trigger`   | Trigger the object (start a ADC conversion...).
-`turn`	    | Turn the object ON/OFF.
-
+Actions are lower-cased words:
+ * `power` ON/OFF;
+ * `turn` ON/OFF;
+ * `configure`;
+ * `write`;
+ * `read`;
+ * `stat`: get the status of an object;
+ * `toggle`;
+ * `trigger`: start an ADC conversion...
+ * `clear`: clear an IRQ flag...
+ * `reset`: reset a counter...
+ * `enable`: enable an IRQ...
+ * `disable`
+ * ...
 
 How the objects are named {#using_objects}
 =========================
@@ -130,19 +129,20 @@ Objects can be designated using a _path_, between parentheses:
  * `(counter0,compare0,counter)`: equals `counter0`;
  * `(counter0,count)`: the `count` register of counter0;
  * `(counter0,irq)`: the IRQ object of counter0;
- * `((portb,1,0),port)`: GPIO port of PB0, equals `portb`;
- * `(portb,pcic)`: pin-change interrupt controller of portb...
+ * `((portb,1,0),port)`: GPIO port of pin PB0, equals `portb`;
+ * `(portb,pcic)`: pin-change interrupt controller of portb
+ * ...
 
-HWA can drive external controllers, through a constructor:
- * `HW_PCF8574( interface, twi0, address, 0x27 )`: @ref pcf8574 "PCF8574"
- * `HW_HD44780( lines, 2, cols, 16, e, pc2, rs, pc0, rw, pc1, data, (port2,4,4) )`: @ref hd44780 "HD44780"
+HWA can drive external controllers, using a constructor:
+ * @ref pcf8574 "PCF8574": `HW_PCF8574( interface, twi0, address, 0x27 )`
+ * @ref hd44780 "HD44780": `HW_HD44780( lines, 2, cols, 16, e, pc2, rs, pc0, rw, pc1, data, (port2,4,4) )`
 
 
 I/Os {#using_ios}
 ====
 
-I/O pins are designated using a path made of a port name, a number of consecutive
-pins (or 1 if ommitted), and the lowest pin number:
+I/O pins such as PA2, PB4... are designated using a path made of a port name, a
+number of consecutive pins (or 1 if ommitted), and the lowest pin number:
  * `(porta,2)` or `(porta,1,2)`: aka PA2;
  * `(portb,4,2)`: pins PB5,PB4,PB4,PB2;
 
@@ -171,9 +171,8 @@ hw( configure, pin,
     mode,      output_push_pull );
 @endcode
 
-`function` is an optionnal parameter that indicates the function of the pin (if
-ommitted, `gpio` is assumed):
- * `gpio`: the pin acts as a GPIO pin;
+`function` is an optionnal parameter that indicates the function of the pin:
+ * `gpio`: the pin acts as a GPIO pin (default if `function` is ommitted);
  * `(CONTROLLER,SIGNAL)`: the pin is driven by an internal peripheral controller
    signal:
    * `(uart0,txd)`: output of uart0
@@ -189,7 +188,7 @@ hwa( commit );
 
 
 `mode` tells how, electrically, the pin behaves. It is mandatory or forbidden
-depending on the `function` of the pin. Values for AVR, STM32, and ESP8266 are:
+depending on the `function` of the pin. Typical values are:
     *  `analog_input`
     *  `analog_input_floating`
     *  `analog_input_pullup`
